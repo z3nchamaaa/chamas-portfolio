@@ -1,0 +1,87 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { title, summary, tags, runsOn, repo, demo } = project.data;
+---
+
+<Base title={title} description={summary}>
+  <article>
+    <p><a href="/projects/">← Projects</a></p>
+    <h1>{title}</h1>
+    <p class="muted">{summary}</p>
+    <dl>
+      {
+        tags.length > 0 && (
+          <>
+            <dt>Tags</dt>
+            <dd>
+              {tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </dd>
+          </>
+        )
+      }
+      {
+        runsOn.length > 0 && (
+          <>
+            <dt>Runs on</dt>
+            <dd>{runsOn.join(' / ')}</dd>
+          </>
+        )
+      }
+      {
+        repo && (
+          <>
+            <dt>Repository</dt>
+            <dd>
+              <a href={repo}>{repo}</a>
+            </dd>
+          </>
+        )
+      }
+      {
+        demo && (
+          <>
+            <dt>Demo</dt>
+            <dd>
+              <a href={demo}>{demo}</a>
+            </dd>
+          </>
+        )
+      }
+    </dl>
+    <Content />
+  </article>
+</Base>
+
+<style>
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    font-size: 0.9rem;
+  }
+  dt {
+    color: var(--muted);
+  }
+  dd {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    overflow-wrap: anywhere;
+  }
+</style>

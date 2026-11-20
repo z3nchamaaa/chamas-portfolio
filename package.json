@@ -1,0 +1,12 @@
+{
+  "name": "chamas-portfolio",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "check": "npm run check -w apps/web",
+    "deploy": "npm run deploy -w apps/web"
+  },
+  "engines": { "node": ">=24" }
+}

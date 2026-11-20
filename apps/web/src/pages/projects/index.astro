@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<Base title="Projects" description="作ったもの・組んだ環境の一覧">
+  <h1>Projects</h1>
+  <p class="muted">作ったもの、組んだ環境の一覧です。</p>
+  <div class="grid">
+    {projects.map((p) => <ProjectCard project={p} />)}
+  </div>
+</Base>

@@ -1,0 +1,16 @@
+# トンネルの経路設定は Terraform (Cloudflare 側) で管理しているので、
+# ここではトークンを渡してコネクタを起動するだけ
+- name: Docker を用意する
+  ansible.builtin.include_role:
+    name: docker
+
+- name: cloudflared コネクタを起動する
+  community.docker.docker_container:
+    name: cloudflared
+    image: "{{ cloudflared_image }}"
+    command: tunnel --no-autoupdate run
+    env:
+      TUNNEL_TOKEN: "{{ cloudflared_token }}"
+    network_mode: host
+    restart_policy: unless-stopped
+  no_log: true

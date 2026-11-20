@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config';
+
+const layers = [
+  {
+    name: 'Cloudflare',
+    role: 'DNS / Workers（このサイトと軽量 API）/ Tunnel / Access',
+    why: '公開面を一つにまとめ、自宅のポートを開けずに済ませるため',
+    code: 'infra/terraform/cloudflare',
+  },
+  {
+    name: 'Oracle Cloud (Always Free)',
+    role: '外形監視 (Uptime Kuma) / Tailscale ハブ / 常時稼働が必要な処理',
+    why: '自宅ラボの監視は自宅の外から行う必要があるため',
+    code: 'infra/terraform/oci, infra/ansible',
+  },
+  {
+    name: 'Proxmox VE（自宅）',
+    role: 'k3s クラスタ / 監視基盤 / デモアプリ',
+    why: 'クラウドの無料枠では組めない規模の構成を試すため',
+    code: 'infra/ansible',
+  },
+  {
+    name: 'GitHub',
+    role: 'ソースコード / IaC / CI (GitHub Actions) / 設計記録 (ADR)',
+    why: '構成とその理由をすべて追える状態にしておくため',
+    code: '.github/workflows, docs/adr',
+  },
+];
+
+// 全角文字は等幅フォントで幅がずれるため、図のラベルは英語にする
+const diagram = `              [ Cloudflare ]
+  DNS / Workers (this site) / Tunnel / Access
+        |                          |
+        | Tunnel                   |
+        v                          v
+ [ Proxmox (home) ] <-Tailscale-> [ Oracle Cloud ]
+  k3s / monitoring / demos         Uptime Kuma / hub
+
+ [ GitHub ] code / IaC / CI / ADR --> every layer`;
+---
+
+<Base title="Architecture" description="このポートフォリオを支えるインフラ構成と設計判断">
+  <h1>Architecture</h1>
+  <p>
+    このサイトと周辺環境の構成です。設計の基本方針は
+    <strong>「公開ページは止まらない場所に置き、自宅ラボは見せる材料にする」</strong>
+    です。自宅ラボが停電や回線障害で止まっても、このサイトは表示され続けます。
+  </p>
+
+  <pre aria-label="構成図">{diagram}</pre>
+
+  <h2>役割分担</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>レイヤー</th><th>役割</th><th>理由</th><th>コード</th></tr>
+      </thead>
+      <tbody>
+        {
+          layers.map((l) => (
+            <tr>
+              <td data-label="レイヤー"><strong>{l.name}</strong></td>
+              <td data-label="役割">{l.role}</td>
+              <td data-label="理由">{l.why}</td>
+              <td data-label="コード"><code>{l.code}</code></td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <h2>設計判断の記録</h2>
+  <p>
+    なぜこの構成にしたのかは、リポジトリの
+    <a href={`${site.links.repo}`}><code>docs/adr</code></a> に ADR（Architecture Decision Record）として残しています。
+  </p>
+</Base>
+
+<style>
+  /* 狭い画面では表を行ごとのカードに崩す */
+  @media (max-width: 640px) {
+    thead {
+      display: none;
+    }
+    tr,
+    td {
+      display: block;
+    }
+    tr {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 0.15rem 0;
+      border: 0;
+    }
+    td:not(:first-child)::before {
+      content: attr(data-label);
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    code {
+      overflow-wrap: anywhere;
+    }
+  }
+</style>

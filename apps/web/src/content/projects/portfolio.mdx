@@ -1,0 +1,17 @@
+---
+title: このポートフォリオ
+summary: Astro + Cloudflare Workers で構築し、インフラも含めて Terraform / GitHub Actions で管理しているサイト。
+tags: [Astro, Cloudflare Workers, Terraform, GitHub Actions]
+runsOn: [cloudflare, github]
+order: 2
+---
+
+## 構成
+
+詳しくは [Architecture](/architecture/) を参照。
+
+## ポイント
+
+- ページは静的生成し、動的な処理だけ Worker で返す
+- DNS・Workers のカスタムドメインは Terraform で管理
+- PR ごとに型チェックとビルド、`terraform plan` を GitHub Actions で実行

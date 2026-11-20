@@ -1,0 +1,14 @@
+# hosts.yml にコピーして使う（hosts.yml は .gitignore 済み）
+# Tailscale 導入後は ansible_host を Tailscale の MagicDNS 名にする
+all:
+  children:
+    edge:            # Oracle Cloud
+      hosts:
+        edge-01:
+          ansible_host: edge-01.your-tailnet.ts.net
+          ansible_user: ubuntu
+    homelab:         # Proxmox 上の VM
+      hosts:
+        lab-gw-01:
+          ansible_host: 192.168.1.50
+          ansible_user: ubuntu

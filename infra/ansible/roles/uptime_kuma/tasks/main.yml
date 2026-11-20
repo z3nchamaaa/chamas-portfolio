@@ -1,0 +1,17 @@
+- name: データ用ディレクトリを作る
+  ansible.builtin.file:
+    path: "{{ uptime_kuma_dir }}/data"
+    state: directory
+    mode: "0750"
+
+# 外には公開しない (localhost にだけバインド)。管理画面は `tailscale serve 3001` か
+# SSH のポートフォワードで開く。公開ステータスページは必要になったら Cloudflare Tunnel で出す
+- name: Uptime Kuma を起動する
+  community.docker.docker_container:
+    name: uptime-kuma
+    image: "{{ uptime_kuma_image }}"
+    volumes:
+      - "{{ uptime_kuma_dir }}/data:/app/data"
+    ports:
+      - "127.0.0.1:3001:3001"
+    restart_policy: unless-stopped

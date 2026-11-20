@@ -1,0 +1,19 @@
+- name: すべてのホストの共通設定
+  hosts: all
+  become: true
+  roles:
+    - common
+    - tailscale
+
+- name: Oracle Cloud の常時稼働ノード
+  hosts: edge
+  become: true
+  roles:
+    - docker
+    - uptime_kuma
+
+- name: 自宅ラボの公開用ゲートウェイ
+  hosts: homelab
+  become: true
+  roles:
+    - cloudflared

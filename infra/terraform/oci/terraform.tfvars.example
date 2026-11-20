@@ -1,0 +1,4 @@
+compartment_id = "ocid1.tenancy.oc1..xxxx"
+ssh_public_key = "ssh-ed25519 AAAA... you@example"
+# 初回セットアップ時だけ自宅の IP を入れ、Tailscale 導入後は空に戻す
+ssh_allowed_cidrs = []

@@ -1,0 +1,3 @@
+# infra/terraform/cloudflare の output から取得する
+#   export CLOUDFLARED_TOKEN=$(terraform -chdir=../terraform/cloudflare output -raw homelab_tunnel_token)
+cloudflared_token: "{{ lookup('env', 'CLOUDFLARED_TOKEN') }}"

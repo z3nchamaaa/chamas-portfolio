@@ -1,0 +1,10 @@
+- name: Docker を入れる (Ubuntu 標準パッケージ)
+  ansible.builtin.apt:
+    name: [docker.io, docker-compose-v2]
+    state: present
+
+- name: Docker を起動・自動起動する
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true

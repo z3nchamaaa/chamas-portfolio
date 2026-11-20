@@ -1,0 +1,30 @@
+---
+import { site } from '../site.config';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="container inner">
+    <span class="muted">© {year} {site.name}</span>
+    <span class="muted">
+      このサイトのコードとインフラ定義は
+      <a href={site.links.repo}>GitHub</a> で公開しています
+    </span>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+</style>

@@ -1,0 +1,13 @@
+# backend.hcl にコピーして使う（backend.hcl は .gitignore 済み）
+# Cloudflare R2 を S3 互換の state 置き場として使う。
+# アクセスキーは環境変数 AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY で渡す（R2 の API トークン）。
+bucket                      = "portfolio-tfstate"
+region                      = "auto"
+endpoints                   = { s3 = "https://<ACCOUNT_ID>.r2.cloudflarestorage.com" }
+use_lockfile                = true
+use_path_style              = true
+skip_credentials_validation = true
+skip_metadata_api_check     = true
+skip_region_validation      = true
+skip_requesting_account_id  = true
+skip_s3_checksum            = true

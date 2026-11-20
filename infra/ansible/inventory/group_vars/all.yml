@@ -1,0 +1,3 @@
+timezone: Asia/Tokyo
+# 秘密情報は Ansible Vault か環境変数で渡し、平文でコミットしない
+tailscale_authkey: "{{ lookup('env', 'TAILSCALE_AUTHKEY') }}"

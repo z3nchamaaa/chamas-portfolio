@@ -1,0 +1,23 @@
+- name: パッケージを最新化する
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: safe
+    cache_valid_time: 3600
+
+- name: 基本パッケージを入れる
+  ansible.builtin.apt:
+    name: "{{ common_packages }}"
+    state: present
+
+- name: タイムゾーンを設定する
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+- name: SSH のパスワード認証を無効化する
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/10-hardening.conf
+    content: |
+      PasswordAuthentication no
+      PermitRootLogin no
+    mode: "0644"
+  notify: Restart ssh
