@@ -6,3 +6,7 @@ zone_name  = "example.com"
 homelab_services = {
   # "demo" = "http://192.168.1.50:8080"
 }
+
+# 公開前は自分だけが見られるようにする。公開するときは false
+access_enabled        = true
+access_allowed_emails = ["you@example.com"]

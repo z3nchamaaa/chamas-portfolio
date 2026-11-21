@@ -6,12 +6,14 @@
 
 1. 独自ドメインを取得し、Cloudflare にゾーンを追加する
 2. R2 バケット `portfolio-tfstate` を作り、R2 の API トークン（Object Read & Write）を発行する
-3. Terraform 用の API トークンを発行する（必要な権限: Workers Scripts / Workers Routes / DNS / Cloudflare Tunnel の編集）
-4. `infra/terraform/backend.hcl.example` を `backend.hcl` にコピーして値を埋める
+3. Zero Trust のダッシュボードを一度開き、チーム名を決めて Free プランで組織を作る（Access を使うため）
+4. Terraform 用の API トークンを発行する（必要な権限: Workers Scripts / Workers Routes / DNS / Cloudflare Tunnel / Access: Apps and Policies / Access: Organizations, Identity Providers, and Groups の編集）
+5. `infra/terraform/backend.hcl.example` を `backend.hcl` にコピーして値を埋める
 
 ## 2. ポートフォリオの初回デプロイ
 
 Workers のカスタムドメインは Worker が存在しないと作れないため、先に一度デプロイする。
+`workers_dev: false` にしているので、この時点ではどの URL からもアクセスできない。
 
 ```bash
 npx wrangler login
@@ -26,8 +28,12 @@ cp terraform.tfvars.example terraform.tfvars   # 値を埋める
 export CLOUDFLARE_API_TOKEN=...
 export AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=...   # R2 のキー
 terraform init -backend-config=../backend.hcl
+# カスタムドメインより先に Access を作り、未保護の時間を作らない
+terraform apply -target=cloudflare_zero_trust_access_application.portfolio -target=cloudflare_zero_trust_access_application.health
 terraform apply
 ```
+
+公開するときは `terraform.tfvars` の `access_enabled = false` にして `terraform apply` する。
 
 ## 4. Oracle Cloud
 
@@ -54,3 +60,10 @@ ansible-playbook playbooks/site.yml
 |---|---|
 | `CLOUDFLARE_API_TOKEN` | wrangler deploy / terraform |
 | `CLOUDFLARE_ACCOUNT_ID` | wrangler deploy |
+
+リポジトリ変数（Variables）:
+
+| 名前 | 用途 |
+|---|---|
+| `DEPLOY_ENABLED` | `true` にすると main へのマージで自動デプロイする。未設定の間はデプロイを飛ばす |
+| `SITE_URL` | 独自ドメインの URL（sitemap / OGP に使う） |

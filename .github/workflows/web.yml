@@ -32,7 +32,8 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL }}
 
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    # Cloudflare の準備ができたらリポジトリ変数 DEPLOY_ENABLED=true を設定する
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DEPLOY_ENABLED == 'true'
     needs: build
     runs-on: ubuntu-latest
     environment:

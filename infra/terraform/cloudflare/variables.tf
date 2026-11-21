@@ -30,3 +30,26 @@ variable "homelab_services" {
     # "status" = "http://uptime-kuma:3001"
   }
 }
+
+variable "access_enabled" {
+  description = "公開前は true にしてサイト全体を Cloudflare Access で保護する。公開時に false"
+  type        = bool
+  default     = true
+}
+
+variable "access_allowed_emails" {
+  description = "Access でサイトを閲覧できるメールアドレス。terraform.tfvars に書く（コミットしない）"
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition     = !var.access_enabled || length(var.access_allowed_emails) > 0
+    error_message = "access_enabled = true のときは access_allowed_emails を 1 つ以上指定してください。"
+  }
+}
+
+variable "manage_otp_identity_provider" {
+  description = "ワンタイム PIN のログイン方法を Terraform で作るか。既に有効なら false"
+  type        = bool
+  default     = true
+}

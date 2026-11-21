@@ -32,6 +32,8 @@
 1. **公開サイトを自宅ラボに依存させない** — 自宅が止まってもサイトは表示される（[ADR 0003](docs/adr/0003-separate-public-site-from-homelab.md)）
 2. **インバウンドのポートを開けない** — 公開は Cloudflare Tunnel、管理は Tailscale（[ADR 0004](docs/adr/0004-no-inbound-ports.md)）
 
+公開前の現在は、サイト全体を Cloudflare Access で保護しています（[ADR 0006](docs/adr/0006-restrict-access-before-release.md)）。
+
 判断の経緯はすべて [docs/adr](docs/adr) に残しています。
 
 ## ディレクトリ

@@ -9,5 +9,6 @@
 | [0003](0003-separate-public-site-from-homelab.md) | 公開サイトを自宅ラボに依存させない | Accepted |
 | [0004](0004-no-inbound-ports.md) | インバウンドのポートを開けない | Accepted |
 | [0005](0005-terraform-state-on-r2.md) | Terraform の state を Cloudflare R2 に置く | Accepted |
+| [0006](0006-restrict-access-before-release.md) | 公開前は Cloudflare Access でサイトを保護する | Accepted |
 
 新しい ADR は [template.md](template.md) をコピーして作る。
