@@ -1,1 +1,3 @@
 tailscale_args: "--ssh"
+tailscale_repo_url: https://pkgs.tailscale.com/stable/ubuntu
+tailscale_keyring: /usr/share/keyrings/tailscale-archive-keyring.gpg

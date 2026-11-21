@@ -1,12 +1,12 @@
 - name: Tailscale の APT リポジトリ鍵を置く
   ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_facts['distribution_release'] }}.noarmor.gpg"
-    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    url: "{{ tailscale_repo_url }}/{{ ansible_facts['distribution_release'] }}.noarmor.gpg"
+    dest: "{{ tailscale_keyring }}"
     mode: "0644"
 
 - name: Tailscale の APT リポジトリを追加する
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_facts['distribution_release'] }} main"
+    repo: "deb [signed-by={{ tailscale_keyring }}] {{ tailscale_repo_url }} {{ ansible_facts['distribution_release'] }} main"
     filename: tailscale
 
 - name: Tailscale を入れる
@@ -21,7 +21,7 @@
   changed_when: false
   failed_when: false
 
-- name: tailnet に参加する
+- name: Tailnet に参加する
   ansible.builtin.command: "tailscale up --authkey={{ tailscale_authkey }} {{ tailscale_args }}"
   when: >-
     tailscale_status.rc != 0 or

@@ -4,7 +4,7 @@
   ansible.builtin.include_role:
     name: docker
 
-- name: cloudflared コネクタを起動する
+- name: Cloudflared コネクタを起動する
   community.docker.docker_container:
     name: cloudflared
     image: "{{ cloudflared_image }}"
